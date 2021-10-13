@@ -5,21 +5,22 @@ Created on Sat Jul 17 16:09:52 2021
 @author: ashbu
 """
 
-# Your name:
-# Your student id:
-# Your email:
-# List who you have worked with on this project:
+# Your name: Cooper Drobnich
+# Your student id: 8426 6316
+# Your email: Drobnich@umich.edu
+# List who you have worked with on this project: Adam Brenner, Nicolo Ruffini
 
 import io
+import os
 import sys
 import csv
 import unittest
-          
+
 
 def read_csv(file):
     '''
     Function to read in a CSV
-
+    
     Parameters
     ----------
     file : string
@@ -31,10 +32,28 @@ def read_csv(file):
         the double-nested dictionary that holds the data from the csv.
 
     '''
+
     
-    data_dict = {}
-    row_count =  1
+    with open(file) as csv_file:
+        reader = csv.reader(csv_file)
+        data_dict = {}
+        row_count =  1
+        data = list(reader)
+        headers = data[0][row_count:]
+        for line in data[1:]:
+            count = 0
+            temp = {}
+            
+            for i in line[1:]:
+                temp[headers[count]] = int(i)
+                count += 1
+            data_dict[line[0]] = temp
     
+
+
+                
+            
+        
     # write your code here that does things
     # it should read in the lines of data
     # it should also seperate the first row as header information
@@ -42,7 +61,7 @@ def read_csv(file):
     # the end result of the data should be formated like so
     # ex: (ap_dict) {“Alabama”: {“AMERICAN INDIAN/ALASKA NATIVE”: 1, “ASIAN”: 61,...},...}
 
-    pass                            
+ 
     return data_dict
 
 
@@ -61,19 +80,35 @@ def pct_calc(data_dict):
         the dictionary that represents the data in terms of percentage share 
         for each demographic for each state in the data set.
     '''
+    pct_dict = {}
+    for line in data_dict:
+        dic = {}
+        total = data_dict[line]['State Totals']
+        
+        
+        for i in data_dict[line]:
+            if i != 'State Totals': 
+                value = data_dict[line][i] / total * 100
+                dic[i] = round(value, 2)
+        
+        pct_dict[line] = dic  
+    
+
     
     # declaring dict to hold pct vals
-    pct_dict = {}
 
     # write in code here
     # it should take the number for each demographic for each state and divide it by the state total column
     # ex: value = ensus_data["Alabama"]["WHITE]/census_data["Alabama]["State Totals"]
     # ex: round(value * 100, 2))            
-    pass
+    
+    #final = round(value * 100, 2)
     return(pct_dict)
 
 
 def pct_dif(data_dict1, data_dict2):
+
+
     '''
     Function to compute the difference between the demographic percentages
 
@@ -89,7 +124,8 @@ def pct_dif(data_dict1, data_dict2):
     pct_dif_dict: dict
         the dictionary of the percent differences.
     '''
-    pass
+    
+    
     
     # creating the dictionary to hold the pct diferences for each "cell"
     pct_dif_dict = {}
@@ -102,7 +138,7 @@ def pct_dif(data_dict1, data_dict2):
     # hint: you want to have a way to deal with the difference in naming conventions
     # ex: "North Carolina" vs "North-Carolina" string.replace is your friend
     
-    pass
+    
     return(pct_dif_dict)
 
 def csv_out(data_dict, file_name):
