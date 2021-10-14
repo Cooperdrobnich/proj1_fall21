@@ -93,7 +93,7 @@ def pct_calc(data_dict):
         
         pct_dict[line] = dic  
     
-
+    
     
     # declaring dict to hold pct vals
 
@@ -104,6 +104,7 @@ def pct_calc(data_dict):
     
     #final = round(value * 100, 2)
     return(pct_dict)
+    print(pct_calc)
 
 
 def pct_dif(data_dict1, data_dict2):
@@ -129,7 +130,17 @@ def pct_dif(data_dict1, data_dict2):
     
     # creating the dictionary to hold the pct diferences for each "cell"
     pct_dif_dict = {}
-    
+    for state in data_dict1:
+        new = state.replace("-"," ")
+        difference = {}
+        for i in data_dict1[state]:
+            if i in data_dict2[new]:
+                new_difference = abs(data_dict1[state][i] - data_dict2[new][i])
+                difference[i] = round(new_difference, 2)
+            else:
+                pass
+        pct_dif_dict[state] = difference
+    return(pct_dif_dict)
     # write code here
     # it should subtract the % val of each val in the 2nd dict from the 1st dict
     # it should take the absolute value of that difference and round it to 2 decimal places
@@ -139,7 +150,7 @@ def pct_dif(data_dict1, data_dict2):
     # ex: "North Carolina" vs "North-Carolina" string.replace is your friend
     
     
-    return(pct_dif_dict)
+    
 
 def csv_out(data_dict, file_name):
     '''
@@ -162,13 +173,21 @@ def csv_out(data_dict, file_name):
     with open(file_name, "w", newline="") as fileout:
         
         header = ["State"] + list(data_dict["Alabama"].keys())
+        writer = csv.writer(fileout, delimiter = ',')
+        writer.writerow(header)
+        for state in data_dict:
+            row_list = []
+            row_list.append(state)
+            for i in data_dict[state]:
+                row_list.append(data_dict[state][i])
+            writer.writerow(row_list)
             
         # you'll want to write the rest of the code here
         # you want to write the header info as the first row 
         # you want to then write each subsequent row of data 
         # the rows will look like this
         # ex: Alabama,0.2,18.32,21.16,2.17,0.05,3.58,1.98,1.45
-    pass
+    
             
 def max_min_mutate(data_dict, col_list):
     # Do not change the code in this function
@@ -215,7 +234,16 @@ def max_min(data_dict):
         {"max":{demographic:{"state":value}}}
     '''
     max_min = {"max":{},"min":{}}
-    
+    for demo in data_dict:
+        demographic = {}
+        for state in data_dict[demo]:
+            demographic[state] = data_dict[demo][state]
+            max_val = dict(sorted(demographic.items(), key = lambda x: x[1], reverse = True)[:5])
+            min_val = dict(sorted(demographic.items(), key = lambda x: x[1])[:5])
+        max_min["max"][demo] = max_val
+        max_min["min"][demo] = min_val
+
+    print(max_min)
     # fill out the code in between here
     # you'll want to make code to fill the dictionary
     # the second inner layer will look like {"max":{demographic:{}}
@@ -224,8 +252,9 @@ def max_min(data_dict):
     # printing and returning the data
     #print(max_min)
 
-    pass
+    print(max_min)
     return(max_min)
+    
 
 def nat_pct(data_dict, col_list):
     '''
