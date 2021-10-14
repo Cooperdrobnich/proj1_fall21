@@ -104,7 +104,7 @@ def pct_calc(data_dict):
     
     #final = round(value * 100, 2)
     return(pct_dict)
-    print(pct_calc)
+    
 
 
 def pct_dif(data_dict1, data_dict2):
